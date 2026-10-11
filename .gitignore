@@ -1,0 +1,13 @@
+.DS_Store
+/vendor/
+/node_modules/
+/js/dist/
+.env
+.phpunit.result.cache
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.venv/
+/dist/
+*.egg-info/
+/local/

@@ -1,0 +1,63 @@
+{
+  "name": "@phox-js/context-atlas",
+  "version": "1.0.0",
+  "description": "Utility library to help process large context inputs in limited context window scenarios",
+  "type": "module",
+  "license": "MIT",
+  "keywords": [
+    "typesafe",
+    "jev",
+    "chunking",
+    "retrieval",
+    "reranking",
+    "system-one"
+  ],
+  "author": "Fox Islam <foxislam@outlook.com>",
+  "bin": {
+    "context-atlas": "js/dist/bin/context-atlas.js"
+  },
+  "main": "./js/dist/src/index.js",
+  "types": "./js/dist/src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./js/dist/src/index.d.ts",
+      "default": "./js/dist/src/index.js"
+    }
+  },
+  "files": [
+    "js/dist/src",
+    "js/dist/bin",
+    "spec",
+    "docs",
+    "LICENSE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20.19"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build && node --test js/dist/test/*.test.js",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@typesafe-ai/sdk": "^0.6.0",
+    "fflate": "^0.8.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fox-Islam/context-atlas.git"
+  },
+  "homepage": "https://github.com/Fox-Islam/context-atlas",
+  "bugs": {
+    "url": "https://github.com/Fox-Islam/context-atlas/issues"
+  }
+}

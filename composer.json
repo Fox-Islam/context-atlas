@@ -1,0 +1,60 @@
+{
+    "name": "phox/context-atlas",
+    "description": "Utility library to help process large context inputs in limited context window scenarios",
+    "type": "library",
+    "license": "MIT",
+    "homepage": "https://github.com/Fox-Islam/context-atlas",
+    "support": {
+        "issues": "https://github.com/Fox-Islam/context-atlas/issues",
+        "source": "https://github.com/Fox-Islam/context-atlas"
+    },
+    "keywords": [
+        "typesafe",
+        "jev",
+        "chunking",
+        "retrieval",
+        "reranking",
+        "system-one"
+    ],
+    "authors": [
+        {
+            "name": "Fox Islam",
+            "email": "foxislam@outlook.com"
+        }
+    ],
+    "bin": [
+        "php/bin/context-atlas"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Phox\\ContextAtlas\\": "php/src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Phox\\ContextAtlas\\Tests\\": "php/tests/"
+        }
+    },
+    "require": {
+        "php": "^8.3",
+        "ext-intl": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "phox/typesafe-sdk-php": "^0.4.2"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^11.5"
+    },
+    "scripts": {
+        "phpstan": "phpstan analyse -c phpstan.neon",
+        "test": "phpunit"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "suggest": {
+        "ext-simplexml": "to read XLSX workbooks and DOCX documents",
+        "ext-zip": "to read XLSX workbooks and DOCX documents"
+    }
+}

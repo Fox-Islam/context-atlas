@@ -1,0 +1,28 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Context Atlas config",
+    "description": "Every key is optional. Sizes are approximate tokens: chars_per_token Unicode code points each.",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "max_tokens": { "type": "integer", "minimum": 1, "default": 800, "description": "A chunk is closed before it grows past this." },
+        "min_tokens": { "type": "integer", "minimum": 0, "default": 200, "description": "A chunk is not closed for size below this, and a section is only split by topic above it." },
+        "overlap_tokens": { "type": "integer", "minimum": 0, "default": 80, "description": "How much of the previous chunk a chunk repeats, within one section and not at a topic change." },
+        "topic_min_tokens": { "type": "integer", "minimum": 0, "default": 60, "description": "No piece cut at a topic change is smaller than this." },
+        "split_long_paragraph_at": { "type": "integer", "minimum": 1, "default": 900, "description": "A paragraph longer than this is split between sentences." },
+        "chars_per_token": { "type": "integer", "minimum": 1, "default": 4, "description": "Unicode code points counted as one token." },
+        "seam_threshold": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.5, "description": "A seam whose two sides belong together less than this is worth cutting." },
+        "refers_back_weight": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.4, "description": "The share of a seam's togetherness taken from whether the second side depends on the first; the rest is whether it continues the subject." },
+        "refers_back_protect": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.5, "description": "A seam whose second side depends on the first at least this much is never cut." },
+        "snippet_chars": { "type": "integer", "minimum": 1, "default": 240, "description": "How much of each side of a seam Jev is shown." },
+        "batch_size": { "type": "integer", "minimum": 1, "default": 40, "description": "Seams per Jev request; each seam asks two questions." },
+        "max_pairs": { "type": "integer", "minimum": 0, "default": 2000, "description": "Seams asked about per document at most; the rest are not cut by topic." },
+        "rank_threshold": { "type": "number", "minimum": 0, "maximum": 1, "default": 0.4, "description": "A passage scoring below this is left out of the ranking." },
+        "passage_chars": { "type": "integer", "minimum": 1, "default": 2400, "description": "How much of each passage Jev is shown when ranking." },
+        "cross_check": { "type": "boolean", "default": true, "description": "Also ask which single passage answers best, and put it first." },
+        "cross_check_rescue": { "type": "boolean", "default": false, "description": "Return the cross-check's pick even when no passage reached rank_threshold." },
+        "conversation_replies": { "type": "boolean", "default": true, "description": "Ask Jev which earlier message a conversation turn replies to when the source does not say. Off, only source reply_to links are kept." },
+        "conversation_outcomes": { "type": "boolean", "default": true, "description": "Ask Jev which conversation messages record an outcome and what each settles (decides links)." },
+        "conversation_corrections": { "type": "boolean", "default": true, "description": "Ask Jev which conversation messages correct an earlier one (corrects links)." }
+    }
+}

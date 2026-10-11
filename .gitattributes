@@ -1,0 +1,23 @@
+# The command-line entry points are shebang scripts, and a CRLF after `#!/usr/bin/env php`
+# becomes part of the interpreter name. A checkout with core.autocrlf=true would write them
+# that way unless the repository says otherwise, so it says so for every file.
+* text=auto eol=lf
+
+# Kept out of the Composer archive, which needs php/src and php/bin, plus spec/ and docs/ for reference.
+# The JavaScript and Python packages are built from their own manifests.
+/local            export-ignore
+/js               export-ignore
+/python           export-ignore
+/php/tests        export-ignore
+/package.json     export-ignore
+/package-lock.json export-ignore
+/composer.lock    export-ignore
+/tsconfig.json    export-ignore
+/pyproject.toml   export-ignore
+/uv.lock          export-ignore
+/phpunit.xml      export-ignore
+/phpstan.neon     export-ignore
+/.gitattributes   export-ignore
+/.gitignore       export-ignore
+/scripts          export-ignore
+/context-atlas    export-ignore

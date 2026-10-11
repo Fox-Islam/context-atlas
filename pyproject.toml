@@ -1,0 +1,53 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "context-atlas"
+version = "1.0.0"
+description = "Utility library to help process large context inputs in limited context window scenarios"
+readme = "docs/python.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
+keywords = ["typesafe", "jev", "chunking", "retrieval", "reranking", "system-one"]
+authors = [{ name = "Fox Islam", email = "foxislam@outlook.com" }]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Text Processing",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Typing :: Typed",
+]
+dependencies = [
+    "typesafe-sdk>=0.7",
+]
+
+[project.urls]
+Homepage = "https://github.com/Fox-Islam/context-atlas"
+Issues = "https://github.com/Fox-Islam/context-atlas/issues"
+
+[project.scripts]
+context-atlas = "context_atlas.console:main"
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.13"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["python/src/context_atlas"]
+
+[tool.hatch.build.targets.sdist]
+include = ["/python", "/spec", "/docs/python.md", "/LICENSE"]
+
+[tool.pytest.ini_options]
+testpaths = ["python/tests"]
+pythonpath = ["python/src"]
+
+[tool.ruff]
+line-length = 120
+src = ["python/src"]
+include = ["python/**/*.py"]
+
+[tool.ruff.lint]
+select = ["F", "E", "W", "I", "UP", "B", "C4", "SIM", "RET", "PTH", "RUF"]

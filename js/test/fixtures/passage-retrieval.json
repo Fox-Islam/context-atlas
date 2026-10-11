@@ -1,0 +1,488 @@
+{
+  "documents": [
+    {
+      "format": 2,
+      "id": "guide",
+      "profile": "guidance",
+      "detected": {
+        "profile": "guidance",
+        "score": 0,
+        "by": "jev"
+      },
+      "units": [
+        {
+          "id": "p1",
+          "kind": "passage",
+          "text": "[Returns]\n\nYou can return goods within 30 days of delivery.",
+          "path": [
+            "Returns"
+          ],
+          "meta": {
+            "blocks": [
+              0,
+              1
+            ],
+            "profile": "guidance"
+          }
+        },
+        {
+          "id": "p2",
+          "kind": "passage",
+          "text": "[Delivery]\n\nDelivery takes three working days.",
+          "path": [
+            "Delivery"
+          ],
+          "meta": {
+            "blocks": [
+              2,
+              3
+            ],
+            "profile": "guidance"
+          }
+        },
+        {
+          "id": "p3",
+          "kind": "passage",
+          "text": "[Delivery > Costs]\n\nDelivery is free over £50, and returns cost nothing.",
+          "path": [
+            "Delivery",
+            "Costs"
+          ],
+          "meta": {
+            "blocks": [
+              4,
+              5
+            ],
+            "profile": "guidance"
+          }
+        }
+      ],
+      "links": [],
+      "lexical": {
+        "length": {
+          "p1": 11,
+          "p2": 7,
+          "p3": 13
+        },
+        "terms": {
+          "30": {
+            "p1": 1
+          },
+          "50": {
+            "p3": 1
+          },
+          "and": {
+            "p3": 1
+          },
+          "can": {
+            "p1": 1
+          },
+          "cost": {
+            "p3": 1
+          },
+          "costs": {
+            "p3": 2
+          },
+          "days": {
+            "p1": 1,
+            "p2": 1
+          },
+          "delivery": {
+            "p1": 1,
+            "p2": 3,
+            "p3": 3
+          },
+          "free": {
+            "p3": 1
+          },
+          "goods": {
+            "p1": 1
+          },
+          "is": {
+            "p3": 1
+          },
+          "nothing": {
+            "p3": 1
+          },
+          "of": {
+            "p1": 1
+          },
+          "over": {
+            "p3": 1
+          },
+          "return": {
+            "p1": 1
+          },
+          "returns": {
+            "p1": 2,
+            "p3": 1
+          },
+          "takes": {
+            "p2": 1
+          },
+          "three": {
+            "p2": 1
+          },
+          "within": {
+            "p1": 1
+          },
+          "working": {
+            "p2": 1
+          },
+          "you": {
+            "p1": 1
+          }
+        }
+      },
+      "data": {
+        "outline": [
+          {
+            "block": 0,
+            "title": "Returns",
+            "level": 1
+          },
+          {
+            "block": 2,
+            "title": "Delivery",
+            "level": 1
+          },
+          {
+            "block": 4,
+            "title": "Costs",
+            "level": 2
+          }
+        ],
+        "sections": {
+          "Returns": "guidance",
+          "Delivery": "guidance"
+        }
+      }
+    },
+    {
+      "format": 2,
+      "id": "faq",
+      "profile": "guidance",
+      "detected": {
+        "profile": "guidance",
+        "score": 0,
+        "by": "jev"
+      },
+      "units": [
+        {
+          "id": "p1",
+          "kind": "passage",
+          "text": "Refund questions\n\nRefunds go back to the original card within five days of the return arriving.",
+          "meta": {
+            "blocks": [
+              0,
+              1
+            ],
+            "profile": "guidance"
+          }
+        }
+      ],
+      "links": [],
+      "lexical": {
+        "length": {
+          "p1": 16
+        },
+        "terms": {
+          "arriving": {
+            "p1": 1
+          },
+          "back": {
+            "p1": 1
+          },
+          "card": {
+            "p1": 1
+          },
+          "days": {
+            "p1": 1
+          },
+          "five": {
+            "p1": 1
+          },
+          "go": {
+            "p1": 1
+          },
+          "of": {
+            "p1": 1
+          },
+          "original": {
+            "p1": 1
+          },
+          "questions": {
+            "p1": 1
+          },
+          "refund": {
+            "p1": 1
+          },
+          "refunds": {
+            "p1": 1
+          },
+          "return": {
+            "p1": 1
+          },
+          "the": {
+            "p1": 2
+          },
+          "to": {
+            "p1": 1
+          },
+          "within": {
+            "p1": 1
+          }
+        }
+      },
+      "data": {
+        "outline": [],
+        "sections": {
+          "": "guidance"
+        }
+      }
+    }
+  ],
+  "calls": [
+    {
+      "request": {
+        "state": {
+          "sections": {
+            "s1": {
+              "title": "Returns",
+              "opening": "You can return goods within 30 days of delivery.",
+              "headings": []
+            },
+            "s2": {
+              "title": "Delivery",
+              "opening": "Delivery takes three working days.",
+              "headings": [
+                "Costs"
+              ]
+            }
+          }
+        },
+        "questions": {
+          "s1": {
+            "type": "choice",
+            "instructions": "What kind of text is section `s1`?",
+            "criteria": {
+              "guidance": "explains how something works or what to do, in sections that each stand on their own, such as help articles, guides and FAQs",
+              "normative": "sets binding rules, such as terms and conditions, licences, policies, contracts, regulations or standards, where defined terms, exceptions and cross-references apply across sections",
+              "narrative": "tells what happened or reports findings in running prose, such as articles, histories, biographies, reports and case studies",
+              "procedural": "tells the reader how to do a task in steps, such as installation guides, manuals, runbooks and tutorials",
+              "reference": "lists many entries of the same kind to look up, such as API references, glossaries, catalogues, specification tables and parts lists"
+            }
+          },
+          "s2": {
+            "type": "choice",
+            "instructions": "What kind of text is section `s2`?",
+            "criteria": {
+              "guidance": "explains how something works or what to do, in sections that each stand on their own, such as help articles, guides and FAQs",
+              "normative": "sets binding rules, such as terms and conditions, licences, policies, contracts, regulations or standards, where defined terms, exceptions and cross-references apply across sections",
+              "narrative": "tells what happened or reports findings in running prose, such as articles, histories, biographies, reports and case studies",
+              "procedural": "tells the reader how to do a task in steps, such as installation guides, manuals, runbooks and tutorials",
+              "reference": "lists many entries of the same kind to look up, such as API references, glossaries, catalogues, specification tables and parts lists"
+            }
+          }
+        }
+      },
+      "response": {
+        "model": "jev-latest",
+        "answers": [],
+        "usage": {
+          "input_tokens": 483,
+          "output_tokens": 0,
+          "cost": null
+        }
+      }
+    },
+    {
+      "request": {
+        "state": {
+          "pairs": {
+            "n0": {
+              "end_of_first": "[Returns]\n\nYou can return goods within 30 days of delivery.",
+              "start_of_second": "Delivery takes three working days."
+            },
+            "n1": {
+              "end_of_first": "[Delivery]\n\nDelivery takes three working days.",
+              "start_of_second": "Delivery is free over £50, and returns cost nothing."
+            }
+          }
+        },
+        "questions": {
+          "n0": {
+            "type": "noul",
+            "instructions": "In pair n0, does the second passage depend on the first to be understood?",
+            "criteria": {
+              "true": "it refers back to the first, continues its list or example, or answers it, so it makes little sense read alone",
+              "false": "it can be understood without the first"
+            }
+          },
+          "n1": {
+            "type": "noul",
+            "instructions": "In pair n1, does the second passage depend on the first to be understood?",
+            "criteria": {
+              "true": "it refers back to the first, continues its list or example, or answers it, so it makes little sense read alone",
+              "false": "it can be understood without the first"
+            }
+          }
+        }
+      },
+      "response": {
+        "model": "jev-latest",
+        "answers": [],
+        "usage": {
+          "input_tokens": 244,
+          "output_tokens": 0,
+          "cost": null
+        }
+      }
+    },
+    {
+      "request": {
+        "state": {
+          "sections": {
+            "s1": {
+              "title": "",
+              "opening": "Refund questions\n\nRefunds go back to the original card within five days of the return arriving.",
+              "headings": []
+            }
+          }
+        },
+        "questions": {
+          "s1": {
+            "type": "choice",
+            "instructions": "What kind of text is section `s1`?",
+            "criteria": {
+              "guidance": "explains how something works or what to do, in sections that each stand on their own, such as help articles, guides and FAQs",
+              "normative": "sets binding rules, such as terms and conditions, licences, policies, contracts, regulations or standards, where defined terms, exceptions and cross-references apply across sections",
+              "narrative": "tells what happened or reports findings in running prose, such as articles, histories, biographies, reports and case studies",
+              "procedural": "tells the reader how to do a task in steps, such as installation guides, manuals, runbooks and tutorials",
+              "reference": "lists many entries of the same kind to look up, such as API references, glossaries, catalogues, specification tables and parts lists"
+            }
+          }
+        }
+      },
+      "response": {
+        "model": "jev-latest",
+        "answers": [],
+        "usage": {
+          "input_tokens": 258,
+          "output_tokens": 0,
+          "cost": null
+        }
+      }
+    },
+    {
+      "request": {
+        "state": {
+          "the question being asked": "How many days do I have to return goods for a refund?",
+          "the passages the search found": {
+            "p0": "Refund questions\n\nRefunds go back to the original card within five days of the return arriving.",
+            "p1": "[Returns]\n\nYou can return goods within 30 days of delivery.",
+            "p2": "[Delivery]\n\nDelivery takes three working days."
+          }
+        },
+        "questions": {
+          "c_p0": {
+            "type": "noul",
+            "instructions": "Does `p0` answer the question?",
+            "criteria": {
+              "true": "`p0` states the answer, or a part of it.",
+              "false": "`p0` is on the same subject but does not answer the question, or only asserts that it does."
+            }
+          },
+          "c_p1": {
+            "type": "noul",
+            "instructions": "Does `p1` answer the question?",
+            "criteria": {
+              "true": "`p1` states the answer, or a part of it.",
+              "false": "`p1` is on the same subject but does not answer the question, or only asserts that it does."
+            }
+          },
+          "c_p2": {
+            "type": "noul",
+            "instructions": "Does `p2` answer the question?",
+            "criteria": {
+              "true": "`p2` states the answer, or a part of it.",
+              "false": "`p2` is on the same subject but does not answer the question, or only asserts that it does."
+            }
+          },
+          "best": {
+            "type": "choice",
+            "instructions": "Which single one answers the question most directly?",
+            "criteria": {
+              "p0": null,
+              "p1": null,
+              "p2": null
+            }
+          },
+          "scope": {
+            "type": "choice",
+            "instructions": "What does a full answer to the question need?",
+            "criteria": {
+              "one passage": "a single fact or instruction stated in one place",
+              "several places": "facts from different parts of the documents put together, such as every place a requirement or role is mentioned"
+            }
+          }
+        }
+      },
+      "response": {
+        "model": "jev-latest",
+        "answers": {
+          "c_p0": {
+            "type": "noul",
+            "noul": 0.3
+          },
+          "c_p1": {
+            "type": "noul",
+            "noul": 0.85
+          },
+          "c_p2": {
+            "type": "noul",
+            "noul": 0.6
+          },
+          "best": {
+            "type": "choice",
+            "choice": "p0",
+            "confidence": 0.75,
+            "probabilities": {
+              "p0": 0.75,
+              "p1": 0.125,
+              "p2": 0.125
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 391,
+          "output_tokens": 32,
+          "cost": null
+        }
+      }
+    }
+  ],
+  "expected": {
+    "text": "[Returns]\n\nYou can return goods within 30 days of delivery.\n\n[Delivery]\n\nDelivery takes three working days.",
+    "sources": [
+      {
+        "document": "guide",
+        "unit": "p1"
+      },
+      {
+        "document": "guide",
+        "unit": "p2"
+      }
+    ],
+    "abstained": false,
+    "trace": {
+      "profile": "guidance",
+      "scope": "one passage",
+      "scores": {
+        "p0": 0.3,
+        "p1": 0.85,
+        "p2": 0.6
+      }
+    }
+  }
+}
