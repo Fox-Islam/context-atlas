@@ -40,7 +40,7 @@
         "ext-intl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "phox/typesafe-sdk-php": "^0.4.2"
+        "phox/typesafe-sdk-php": "^0.5.2"
     },
     "require-dev": {
         "phpstan/phpstan": "^2.1",

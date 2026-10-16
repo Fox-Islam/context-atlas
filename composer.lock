@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "934f0b20899e717919d894a9e8a0b6cf",
+    "content-hash": "6d172c911629d1b19051fb2d84938b09",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -339,16 +339,16 @@
         },
         {
             "name": "phox/typesafe-sdk-php",
-            "version": "v0.4.2",
+            "version": "v0.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Fox-Islam/typesafe-sdk-php.git",
-                "reference": "866543c19adb147d257035b268468c01629212c6"
+                "reference": "339163e7c7537967a5d8c6309901244fe827720a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Fox-Islam/typesafe-sdk-php/zipball/866543c19adb147d257035b268468c01629212c6",
-                "reference": "866543c19adb147d257035b268468c01629212c6",
+                "url": "https://api.github.com/repos/Fox-Islam/typesafe-sdk-php/zipball/339163e7c7537967a5d8c6309901244fe827720a",
+                "reference": "339163e7c7537967a5d8c6309901244fe827720a",
                 "shasum": ""
             },
             "require": {
@@ -403,9 +403,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Fox-Islam/typesafe-sdk-php/issues",
-                "source": "https://github.com/Fox-Islam/typesafe-sdk-php/tree/v0.4.2"
+                "source": "https://github.com/Fox-Islam/typesafe-sdk-php/tree/v0.5.2"
             },
-            "time": "2026-09-26T00:19:15+00:00"
+            "time": "2026-10-16T02:38:47+00:00"
         },
         {
             "name": "psr/http-client",
