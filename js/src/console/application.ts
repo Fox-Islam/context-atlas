@@ -18,7 +18,7 @@ import type { Jev } from '../typesafe/jev.js';
 import { Args } from './args.js';
 import { encode, JsonFloat } from './json.js';
 
-export const VERSION = '1.0.0';
+export const VERSION = '1.1.0';
 
 const USAGE = `Usage:
   context-atlas chunk [FILE|-] [--format=markdown|text|blocks] [--no-jev] [--config=FILE] [--pretty]

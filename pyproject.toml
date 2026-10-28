@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "context-atlas"
-version = "1.0.1"
+version = "1.1.0"
 description = "Utility library to help process large context inputs in limited context window scenarios"
 readme = "docs/python.md"
 license = "MIT"

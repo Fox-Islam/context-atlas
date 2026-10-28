@@ -2,10 +2,11 @@ from __future__ import annotations
 
 import io
 import json
+import re
 from pathlib import Path
 from typing import Any
 
-from support import FakeJev
+from support import ROOT, FakeJev
 
 from context_atlas.console import USAGE, Application, encode
 
@@ -137,7 +138,9 @@ def test_unknown_command_prints_the_usage_and_exits_1() -> None:
 def test_help_and_version() -> None:
     assert run(['--help']) == (0, f'{USAGE}\n', '')
     assert run(['help']) == (0, f'{USAGE}\n', '')
-    assert run(['chunk', '--version']) == (0, '1.0.0\n', '')
+    version = re.search(r'^version = "([^"]+)"', (ROOT / 'pyproject.toml').read_text(encoding='utf-8'), re.MULTILINE)
+    assert version is not None
+    assert run(['chunk', '--version']) == (0, f'{version.group(1)}\n', '')
 
 
 def test_encode_writes_floats_and_line_separators_as_php_does() -> None:

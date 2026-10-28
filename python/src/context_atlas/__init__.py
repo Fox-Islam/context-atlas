@@ -18,7 +18,7 @@ from .passage import Passage, RankedPassage
 from .processor import Processor
 from .reranker import Reranker
 
-__version__ = '1.0.0'
+__version__ = '1.1.0'
 
 __all__ = [
     'Block',

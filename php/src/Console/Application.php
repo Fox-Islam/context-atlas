@@ -26,7 +26,7 @@ use Throwable;
  */
 final class Application
 {
-    public const string VERSION = '1.0.0';
+    public const string VERSION = '1.1.0';
 
     private const string USAGE = <<<'TXT'
         Usage:
