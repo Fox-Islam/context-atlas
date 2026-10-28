@@ -7,7 +7,6 @@ from __future__ import annotations
 
 import json
 import math
-import os
 import re
 import sys
 from collections.abc import Callable
@@ -15,11 +14,9 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any, TextIO
 
-import httpx2
-from typesafe_sdk import TypeSafeClient
-
 from . import __version__ as VERSION
 from .chunker import Chunker
+from .client import client_from_env
 from .config import Config
 from .errors import ContextAtlasError
 from .index import FileStore
@@ -34,6 +31,8 @@ USAGE = """Usage:
   context-atlas rank QUERY [FILE|-] [--limit=N] [--config=FILE] [--pretty]
   context-atlas ingest FILE|- [--id=ID] [--format=FORMAT] [--profile=PROFILE] [--title=TITLE]
                         [--store=DIR] [--no-jev] [--config=FILE] [--pretty]
+  context-atlas append FILE|- --id=ID --store=DIR [--format=FORMAT] [--profile=PROFILE]
+                        [--no-jev] [--config=FILE] [--pretty]
   context-atlas retrieve QUERY --store=DIR [--documents=ID,...] [--config=FILE] [--pretty]
 
 chunk  Splits a document into passages. Reads Markdown by default; a .txt file is
@@ -43,6 +42,9 @@ rank   Orders passages by whether they answer QUERY. FILE is a JSON list of
 ingest Reads a document in any supported format (by its extension, or --format;
        stdin needs --format and --id) and prints it as a stored document, or,
        with --store, saves it in that directory and prints a summary.
+append Adds a document's new text (by its extension, or --format) to the end of the
+       prose document --id in --store, asking Jev only about the new blocks, and
+       prints a summary.
 retrieve
        Gathers the context that answers QUERY from the documents in --store,
        searched by exact terms; --documents limits it to those ids.
@@ -63,8 +65,6 @@ NO_ANSWER = 'Jev did not answer. Check TYPESAFE_API_KEY.'
 
 # The path System One is answered on by each provider. The SDK knows only TypeSafe's, so an
 # OpenRouter client rewrites it in the transport; the bodies are the same on both.
-SYSTEM_ONE_PATHS = {'typesafe': '/v1/systemone', 'openrouter': '/api/alpha/decisions'}
-
 _LEADING_INT = re.compile(r'[ \t\n\r\v\f]*[+-]?[0-9]+')
 
 
@@ -121,6 +121,8 @@ class Application:
                 return self._rank(args)
             if args.command == 'ingest':
                 return self._ingest(args)
+            if args.command == 'append':
+                return self._append(args)
             if args.command == 'retrieve':
                 return self._retrieve(args)
             return self._usage(args.command)
@@ -193,6 +195,36 @@ class Application:
         if store is None:
             return self._json(document.to_dict(), args)
         FileStore(store).put(document)
+        summary = {
+            'id': document.id,
+            'profile': document.profile,
+            'detected': document.detected,
+            'units': len(document.units),
+            'links': len(document.links),
+            'store': store,
+        }
+
+        return self._json(summary, args)
+
+    def _append(self, args: Args) -> int:
+        document_id, store = args.option('id'), args.option('store')
+        if not args.positional or document_id is None or store is None:
+            raise ContextAtlasError('append needs a FILE or -, --id and --store.')
+        path = args.positional[0]
+        given = args.option('format') or (None if path == '-' else formats.of(path))
+        if given is None:
+            raise ContextAtlasError(
+                'Reading stdin needs --format.' if path == '-' else f'Cannot tell the format of {path}: pass --format.'
+            )
+        files = FileStore(store)
+        stored = files.document(document_id)
+        if stored is None:
+            raise ContextAtlasError(f'No document "{document_id}" in {store}.')
+
+        new_blocks = formats.blocks(self._read(path), given)
+        processor = Processor(None if args.has('no-jev') else self._jev(), self._config(args))
+        document = processor.append(stored, new_blocks, args.option('profile'))
+        files.put(document)
         summary = {
             'id': document.id,
             'profile': document.profile,
@@ -368,39 +400,13 @@ def _php_int(value: str) -> int:
     return int(match.group(0)) if match else 0
 
 
-class _Rewriting(httpx2.BaseTransport):
-    def __init__(self, inner: httpx2.BaseTransport, path: str) -> None:
-        self._inner = inner
-        self._path = path
-
-    def handle_request(self, request: httpx2.Request) -> httpx2.Response:
-        if request.url.path == SYSTEM_ONE_PATHS['typesafe']:
-            request.url = request.url.copy_with(path=self._path)
-
-        return self._inner.handle_request(request)
-
-    def close(self) -> None:
-        self._inner.close()
-
-
 def _client_from_environment() -> Jev:
     """
-    A client configured as the PHP SDK reads the environment, including TYPESAFE_PROVIDER.
-
-    The Python SDK refuses to build a client without a key, where the PHP SDK fails on send;
-    both come out as Jev not answering, so `chunk` falls back and `rank` exits 2.
+    The Python SDK refuses to build a client without a key, where the PHP SDK fails on send; both
+    come out as Jev not answering, so `chunk` falls back and `rank` exits 2.
     """
-    provider = os.environ.get('TYPESAFE_PROVIDER', '').strip().lower() or 'typesafe'
-
     try:
-        if provider == 'openrouter':
-            key = os.environ.get('OPENROUTER_API_KEY', '').strip()
-            return _unanswered if key == '' else TypeSafeClient(
-                api_key=key,
-                base_url=os.environ.get('TYPESAFE_BASE_URL', '').strip() or 'https://openrouter.ai',
-                transport=_Rewriting(httpx2.HTTPTransport(), SYSTEM_ONE_PATHS['openrouter']),
-            )
-        return TypeSafeClient()
+        return client_from_env()
     except Exception:
         return _unanswered
 

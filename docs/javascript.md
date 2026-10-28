@@ -15,7 +15,9 @@ npm install @phox-js/context-atlas
 
 Node 20.19 or later, ESM only. Jev is reached through the official
 [`@typesafe-ai/sdk`](https://www.npmjs.com/package/@typesafe-ai/sdk), which
-reads `TYPESAFE_API_KEY`, or `OPENROUTER_API_KEY` with `TYPESAFE_PROVIDER=openrouter`.
+reads `TYPESAFE_API_KEY`. `clientFromEnv()` builds the client the command line uses, which also
+reads `OPENROUTER_API_KEY` with `TYPESAFE_PROVIDER=openrouter`; it throws the SDK's
+`TypeSafeError` when the provider's key is missing.
 
 Bad input (an unknown format or config key, a file that cannot be read, a malformed block
 list, retrieval without Jev) throws `ContextAtlasError`. A Jev request that fails never
@@ -162,6 +164,7 @@ An error thrown by the hook or the client counts as no answer.
 context-atlas chunk [FILE|-] [--format=markdown|text|blocks] [--no-jev] [--config=FILE] [--pretty]
 context-atlas rank QUERY [FILE|-] [--limit=N] [--config=FILE] [--pretty]
 context-atlas ingest FILE|- [--id=ID] [--format=FORMAT] [--profile=PROFILE] [--title=TITLE] [--store=DIR] [--no-jev] [--config=FILE] [--pretty]
+context-atlas append FILE|- --id=ID --store=DIR [--format=FORMAT] [--profile=PROFILE] [--no-jev] [--config=FILE] [--pretty]
 context-atlas retrieve QUERY --store=DIR [--documents=ID,...] [--config=FILE] [--pretty]
 npx @phox-js/context-atlas ...
 ```
@@ -170,7 +173,9 @@ npx @phox-js/context-atlas ...
 file as blocks. `rank` reads a JSON list of passages or the output of `chunk`.
 `ingest` reads any supported format (by extension, or `--format`, which a chat log needs
 unless it is a `.json` or `.jsonl` file: `--format=chat`) and prints the stored document, or saves it in a file store with
-`--store`; `retrieve` answers from that store, which the PHP and Python CLIs share.
+`--store`; `append` adds a file's new text to the end of the stored prose document `--id`,
+asking Jev only about the new blocks; `retrieve` answers from that store, which the PHP and
+Python CLIs share.
 `--config` names a JSON file of the keys in `spec/config.schema.json`. Exit
 codes: 0 done, 1 bad input, 2 Jev did not answer. `TYPESAFE_PROVIDER=openrouter`
 with `OPENROUTER_API_KEY` reaches Jev through OpenRouter.

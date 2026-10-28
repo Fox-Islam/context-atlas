@@ -48,6 +48,39 @@ $history = ['id' => 'history', 'profile' => 'narrative', 'config' => ['max_token
 $guideLinks = ['n0' => 0.1, 'n1' => 0.1, 'n2' => 0.1, 'n3' => 0.1, 'n4' => 0.1];
 $historyLinks = ['n0' => 0.1, 'n1' => 0.1, 'n2' => 0.1];
 
+// The last rule answers the question in none of its words; a vector search finds it second, after
+// a rule that both searches find, and ahead of eleven more that both find.
+$billing = ['id' => 'billing', 'profile' => 'reference', 'blocks' => [
+    ['type' => 'heading', 'text' => 'Billing', 'level' => 1],
+    ['type' => 'heading', 'text' => 'Rule 1', 'level' => 2],
+    ['type' => 'paragraph', 'text' => 'Invoices are issued on the first working day of each month.'],
+    ['type' => 'heading', 'text' => 'Rule 2', 'level' => 2],
+    ['type' => 'paragraph', 'text' => 'Invoices list each service with its own line.'],
+    ['type' => 'heading', 'text' => 'Rule 3', 'level' => 2],
+    ['type' => 'paragraph', 'text' => "Invoices in euros are converted at the day's rate."],
+    ['type' => 'heading', 'text' => 'Rule 4', 'level' => 2],
+    ['type' => 'paragraph', 'text' => 'Invoices for less than ten pounds are rolled into the next month.'],
+    ['type' => 'heading', 'text' => 'Rule 5', 'level' => 2],
+    ['type' => 'paragraph', 'text' => 'Invoices can be downloaded from the account page.'],
+    ['type' => 'heading', 'text' => 'Rule 6', 'level' => 2],
+    ['type' => 'paragraph', 'text' => 'Invoices are sent to the billing contact by email.'],
+    ['type' => 'heading', 'text' => 'Rule 7', 'level' => 2],
+    ['type' => 'paragraph', 'text' => 'Invoices carry the purchase order number when one is given.'],
+    ['type' => 'heading', 'text' => 'Rule 8', 'level' => 2],
+    ['type' => 'paragraph', 'text' => 'Invoices that are disputed are put on hold.'],
+    ['type' => 'heading', 'text' => 'Rule 9', 'level' => 2],
+    ['type' => 'paragraph', 'text' => 'Invoices for annual plans are issued once a year.'],
+    ['type' => 'heading', 'text' => 'Rule 10', 'level' => 2],
+    ['type' => 'paragraph', 'text' => 'Invoices show VAT separately.'],
+    ['type' => 'heading', 'text' => 'Rule 11', 'level' => 2],
+    ['type' => 'paragraph', 'text' => 'Invoices are numbered in sequence.'],
+    ['type' => 'heading', 'text' => 'Rule 12', 'level' => 2],
+    ['type' => 'paragraph', 'text' => 'Invoices are kept for seven years.'],
+    ['type' => 'heading', 'text' => 'Rule 13', 'level' => 2],
+    ['type' => 'paragraph', 'text' => 'Payment is expected one month after the bill is sent.'],
+]];
+$billingNearest = [['document' => 'billing', 'unit' => 'e1'], ['document' => 'billing', 'unit' => 'e13'], ...array_map(static fn (int $i): array => ['document' => 'billing', 'unit' => "e{$i}"], range(2, 12))];
+
 return [
     ['name' => 'detect a profile per section and build each profile\'s links', 'kind' => 'prose-ingest', 'input' => $licence, 'answers' => ['s1' => 'normative', 's2' => 'guidance'] + $links],
     ['name' => 'a profile named by the caller applies to every section', 'kind' => 'prose-ingest', 'input' => $licence + ['profile' => 'normative'], 'answers' => $links],
@@ -84,5 +117,24 @@ return [
         'scope' => ['history'],
         'query' => 'What happened to the bridge between 1890 and 1902?',
         'answers' => $historyLinks + ['c_p0' => 0.9, 'c_p1' => 0.8, 'c_p2' => 0.7, 'c_p3' => 0.6, 'c_p4' => 0.2, 'best' => 'p0', 'scope' => 'several places'],
+    ],
+    [
+        'name' => 'seat a vector hit fusion ranks below the pool in the pool\'s last place',
+        'kind' => 'prose-retrieve',
+        'documents' => [$billing],
+        'scope' => ['billing'],
+        'query' => 'When are invoices due?',
+        'nearest' => $billingNearest,
+        'config' => ['nearest_reserved' => 3],
+        'answers' => ['c_rule-13-8' => 0.9, 'best' => 'rule-13-8'],
+    ],
+    [
+        'name' => 'without reserved places a vector hit both searches outrank stays out of the pool',
+        'kind' => 'prose-retrieve',
+        'documents' => [$billing],
+        'scope' => ['billing'],
+        'query' => 'When are invoices due?',
+        'nearest' => $billingNearest,
+        'answers' => ['c_rule-13-8' => 0.9, 'best' => 'rule-13-8'],
     ],
 ];

@@ -181,6 +181,22 @@ def test_ingest_saves_into_a_store_and_retrieve_reads_it(tmp_path: Path) -> None
     assert context['sources'] == [{'document': 'fees', 'unit': 'p1'}]
 
 
+def test_append_adds_new_text_to_a_stored_document_and_refuses_one_the_store_lacks(tmp_path: Path) -> None:
+    store = str(tmp_path / 'store')
+    (tmp_path / 'log.md').write_text('# Log\n\nThe import started.\n', encoding='utf-8')
+    (tmp_path / 'log-more.md').write_text('# Later\n\nThe import finished.\n', encoding='utf-8')
+    run(['ingest', str(tmp_path / 'log.md'), '--no-jev', '--id=log', f'--store={store}'])
+
+    code, out, _ = run(['append', str(tmp_path / 'log-more.md'), '--no-jev', '--id=log', f'--store={store}'])
+    missing = run(['append', str(tmp_path / 'log-more.md'), '--no-jev', '--id=other', f'--store={store}'])
+
+    assert (code, json.loads(out)['units']) == (0, 2)
+    assert missing[0:3:2] == (1, f'No document "other" in {store}.\n')
+    assert run(['append', '-', '--id=log', f'--store={store}'])[2] == 'Reading stdin needs --format.\n'
+    no_store = run(['append', str(tmp_path / 'log-more.md'), '--id=log'])
+    assert no_store[2] == 'append needs a FILE or -, --id and --store.\n'
+
+
 def test_reading_stdin_needs_a_format_and_an_id() -> None:
     assert run(['ingest', '-', '--format=markdown'])[0:3:2] == (1, 'Reading stdin needs --id.\n')
     assert run(['ingest', '-', '--id=x'])[0:3:2] == (1, 'Reading stdin needs --format.\n')

@@ -6,6 +6,7 @@ stored documents that retrieval answers questions from.
 from .blocks import Block, BlockType
 from .chunk import Chunk, Chunked
 from .chunker import Chunker
+from .client import client_from_env
 from .config import Config
 from .context import Context
 from .document import Document, Link, Unit
@@ -41,6 +42,7 @@ __all__ = [
     'Reranker',
     'Source',
     'Unit',
+    'client_from_env',
     'parse_blocks',
     'parse_markdown',
     'parse_text',

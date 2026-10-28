@@ -21,7 +21,7 @@ use stdClass;
 use Throwable;
 
 /**
- * The command line: `chunk`, `rank`, `ingest` and `retrieve`. Each prints JSON on stdout and any
+ * The command line: `chunk`, `rank`, `ingest`, `append` and `retrieve`. Each prints JSON on stdout and any
  * notice on stderr, so the output can be piped.
  */
 final class Application
@@ -34,6 +34,8 @@ final class Application
           context-atlas rank QUERY [FILE|-] [--limit=N] [--config=FILE] [--pretty]
           context-atlas ingest FILE|- [--id=ID] [--format=FORMAT] [--profile=PROFILE] [--title=TITLE]
                                 [--store=DIR] [--no-jev] [--config=FILE] [--pretty]
+          context-atlas append FILE|- --id=ID --store=DIR [--format=FORMAT] [--profile=PROFILE]
+                                [--no-jev] [--config=FILE] [--pretty]
           context-atlas retrieve QUERY --store=DIR [--documents=ID,...] [--config=FILE] [--pretty]
 
         chunk  Splits a document into passages. Reads Markdown by default; a .txt file is
@@ -43,6 +45,9 @@ final class Application
         ingest Reads a document in any supported format (by its extension, or --format;
                stdin needs --format and --id) and prints it as a stored document, or,
                with --store, saves it in that directory and prints a summary.
+        append Adds a document's new text (by its extension, or --format) to the end of the
+               prose document --id in --store, asking Jev only about the new blocks, and
+               prints a summary.
         retrieve
                Gathers the context that answers QUERY from the documents in --store,
                searched by exact terms; --documents limits it to those ids.
@@ -87,6 +92,7 @@ final class Application
                 $args->command === 'chunk' => $this->chunk($args),
                 $args->command === 'rank' => $this->rank($args),
                 $args->command === 'ingest' => $this->ingest($args),
+                $args->command === 'append' => $this->append($args),
                 $args->command === 'retrieve' => $this->retrieve($args),
                 default => $this->usage($args->command),
             };
@@ -161,6 +167,28 @@ final class Application
             return $this->json($document->toArray(), $args);
         }
         (new FileStore($store))->put($document);
+
+        return $this->json(['id' => $document->id, 'profile' => $document->profile, 'detected' => $document->detected, 'units' => count($document->units), 'links' => count($document->links), 'store' => $store], $args);
+    }
+
+    private function append(Args $args): int
+    {
+        $path = $args->positional[0] ?? null;
+        $id = $args->option('id');
+        $store = $args->option('store');
+        if ($path === null || $id === null || $store === null) {
+            throw new ContextAtlasException('append needs a FILE or -, --id and --store.');
+        }
+        $format = $args->option('format') ?? ($path === '-' ? null : Formats::of($path));
+        if ($format === null) {
+            throw new ContextAtlasException($path === '-' ? 'Reading stdin needs --format.' : "Cannot tell the format of {$path}: pass --format.");
+        }
+        $files = new FileStore($store);
+        $stored = $files->document($id) ?? throw new ContextAtlasException("No document \"{$id}\" in {$store}.");
+
+        $blocks = Formats::blocks($this->read($path), $format);
+        $document = (new Processor($args->has('no-jev') ? null : $this->client(), $this->config($args)))->append($stored, $blocks, $args->option('profile'));
+        $files->put($document);
 
         return $this->json(['id' => $document->id, 'profile' => $document->profile, 'detected' => $document->detected, 'units' => count($document->units), 'links' => count($document->links), 'store' => $store], $args);
     }

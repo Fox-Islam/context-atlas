@@ -94,6 +94,7 @@ final class FixtureRunner
             'passages' => $case['passages'] ?? null,
             'documents' => $case['documents'] ?? null,
             'scope' => $case['scope'] ?? null,
+            'nearest' => $case['nearest'] ?? null,
             'limit' => $case['limit'] ?? null,
             'jev' => $case['jev'] ?? true,
             'config' => (object) ($case['config'] ?? []),
@@ -143,8 +144,10 @@ final class FixtureRunner
     private static function proseRetrieve(array $case, FakeTypeSafe $fake): ?array
     {
         $collection = new Collection(array_map(static fn (array $input): Document => isset($input['markup']) ? self::markup($input) : self::prose($input, $fake), $case['documents']));
+        // A vector search that returns the case's hits, best first, whatever the query.
+        $nearest = isset($case['nearest']) ? static fn (string $query, int $limit, ?array $kinds, ?array $documents): array => $case['nearest'] : null;
 
-        return (new Processor($fake->client()))->retrieve($case['query'], $collection, documents: $case['scope'] ?? null)?->toArray();
+        return (new Processor($fake->client(), Config::fromArray((array) ($case['config'] ?? []))))->retrieve($case['query'], $collection, $nearest, $case['scope'] ?? null)?->toArray();
     }
 
     /**

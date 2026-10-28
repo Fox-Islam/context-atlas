@@ -212,4 +212,11 @@ return [
     $chat('chat: an invalid JSON Lines record is an error naming the line', "{\"role\":\"user\",\"content\":\"hi\"}\n\n{\"role\":\"assistant\",\"content\":}\n"),
     $chat('chat: an object of no known shape is an error', '{"foo": [1, 2], "bar": {"baz": true}}'),
     $chat('chat: a list of nothing recognisable is an error', '[1, "two", {"x": 3}]'),
+    $chat('chat: an agent session log with no message yet reads as no blocks', $jsonl([
+        '{"type":"mode","mode":"default","sessionId":"5b1f"}',
+        '{"type":"permission-mode","permissionMode":"default","sessionId":"5b1f"}',
+        '{"type":"file-history-snapshot","messageId":"m1","snapshot":{}}',
+    ])),
+    $chat('chat: an agent session log of one record and no message reads as no blocks', '{"type":"mode","mode":"default","sessionId":"5b1f"}'),
+    $chat('chat: typed records with no session and no message are an error', $jsonl(['{"type":"invoice","total":10}', '{"type":"refund","total":4}'])),
 ];

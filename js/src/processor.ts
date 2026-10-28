@@ -13,6 +13,7 @@ import { parseDocx, parseDocxBytes } from './parsing/docx.js';
 import { DATA_FORMATS, formatOf, readBlocks, SPREADSHEET_FORMATS } from './parsing/formats.js';
 import { appendProse } from './prose/appender.js';
 import { ingestProse } from './prose/ingest.js';
+import { POOL } from './prose/profiles.js';
 import { inDocumentOrder, key, ProseRetriever, unique } from './prose/retriever.js';
 import { searchLexical } from './store/lexical.js';
 import type { Source } from './store/source.js';
@@ -28,6 +29,9 @@ const CANDIDATES = 20;
 const MAX_TABLES = 12;
 
 const FUSION_K = 60;
+
+/** Reserved vector hits are seated in the smallest first-request pool a prose profile ranks. */
+const RESERVED_POOL = Math.min(...Object.values(POOL));
 
 const SUPERSEDED = '(A later message corrects this one.)';
 
@@ -292,9 +296,16 @@ export class Processor {
             });
         }
 
+        let keys = [...scores].sort(([, a], [, b]) => b - a).map(([key]) => key);
+
+        if (this.config.nearestReserved > 0) {
+            const top = (lists[1] ?? []).slice(0, Math.min(this.config.nearestReserved, RESERVED_POOL)).map((hit) => `${hit.document}\0${hit.unit}`);
+            keys = reserve(keys, top);
+        }
+
         const out: Candidate[] = [];
 
-        for (const [key] of [...scores].sort(([, a], [, b]) => b - a).slice(0, CANDIDATES)) {
+        for (const key of keys.slice(0, CANDIDATES)) {
             const [documentId = '', unitId = ''] = key.split('\0');
             const document = await source.document(documentId);
             const unit = document?.unit(unitId) ?? null;
@@ -351,6 +362,24 @@ function latestCorrection(document: Document, start: string): Unit | null {
         id = next;
         latest = document.unit(next);
     }
+}
+
+/**
+ * The fused keys with each of `top` missing from the reserved pool seated in that pool's
+ * last places, in `top`'s order; the keys they displace move down, in order.
+ */
+function reserve(keys: readonly string[], top: readonly string[]): string[] {
+    const pool = keys.slice(0, RESERVED_POOL);
+    const missing = [...new Set(top.filter((key) => !pool.includes(key)))];
+
+    if (missing.length === 0) {
+        return [...keys];
+    }
+
+    const rest = keys.filter((key) => !missing.includes(key));
+    const kept = RESERVED_POOL - missing.length;
+
+    return [...rest.slice(0, kept), ...missing, ...rest.slice(kept)];
 }
 
 async function everyUnit(source: Source, documents: readonly string[]): Promise<Candidate[]> {

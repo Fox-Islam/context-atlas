@@ -15,7 +15,7 @@ from .index import Source
 from .jev import Jev
 from .markup import profile as markup
 from .parsing import chat, docx, formats
-from .prose import appender, retriever
+from .prose import appender, profiles, retriever
 from .prose import profile as prose
 from .tabular import executor, planner
 from .tabular import profile as tabular
@@ -26,6 +26,9 @@ CANDIDATES = 20
 MAX_TABLES = 12
 
 FUSION_K = 60
+
+# Reserved vector hits are seated in the smallest first-request pool a prose profile ranks.
+RESERVED_POOL = min(profiles.POOL.values())
 
 SUPERSEDED = '(A later message corrects this one.)'
 
@@ -265,14 +268,36 @@ class Processor:
                 found = (str(hit['document']), str(hit['unit']))
                 scores[found] = scores.get(found, 0.0) + 1 / (FUSION_K + rank + 1)
 
+        keys = sorted(scores, key=lambda found: -scores[found])
+        if self._config.nearest_reserved > 0 and len(lists) > 1:
+            reserved = min(self._config.nearest_reserved, RESERVED_POOL)
+            top = [(str(hit['document']), str(hit['unit'])) for hit in lists[1][:reserved]]
+            keys = _reserve(keys, top)
+
         candidates = []
-        for document_id, unit_id in sorted(scores, key=lambda found: -scores[found])[:CANDIDATES]:
+        for document_id, unit_id in keys[:CANDIDATES]:
             document = source.document(document_id)
             unit = document.unit(unit_id) if document is not None else None
             if document is not None and unit is not None:
                 candidates.append((document, unit))
 
         return candidates
+
+
+def _reserve(keys: list[tuple[str, str]], top: list[tuple[str, str]]) -> list[tuple[str, str]]:
+    """
+    The fused keys with each of `top` missing from the reserved pool seated in that pool's
+    last places, in `top`'s order; the keys they displace move down, in order.
+    """
+    pool = keys[:RESERVED_POOL]
+    missing = list(dict.fromkeys(key for key in top if key not in pool))
+    if not missing:
+        return keys
+
+    rest = [key for key in keys if key not in missing]
+    kept = RESERVED_POOL - len(missing)
+
+    return rest[:kept] + missing + rest[kept:]
 
 
 def _with_corrections(units: list[tuple[Document, Unit]]) -> tuple[list[tuple[Document, Unit]], dict[str, str]]:

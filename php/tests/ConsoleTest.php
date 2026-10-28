@@ -140,6 +140,22 @@ final class ConsoleTest extends TestCase
         self::assertSame([['document' => 'fees', 'unit' => 'p1']], $context['sources']);
     }
 
+    public function test_append_adds_new_text_to_a_stored_document_and_refuses_one_the_store_lacks(): void
+    {
+        $store = $this->dir . '/store-append';
+        file_put_contents($this->dir . '/log.md', "# Log\n\nThe import started.\n");
+        file_put_contents($this->dir . '/log-more.md', "# Later\n\nThe import finished.\n");
+        $this->run_(['ingest', $this->dir . '/log.md', '--no-jev', '--id=log', "--store={$store}"]);
+
+        [$code, $out] = $this->run_(['append', $this->dir . '/log-more.md', '--no-jev', '--id=log', "--store={$store}"]);
+        [$missing, , $err] = $this->run_(['append', $this->dir . '/log-more.md', '--no-jev', '--id=other', "--store={$store}"]);
+
+        self::assertSame([0, 2], [$code, json_decode($out, true)['units']]);
+        self::assertSame([1, "No document \"other\" in {$store}.\n"], [$missing, $err]);
+        self::assertSame("Reading stdin needs --format.\n", $this->run_(['append', '-', '--id=log', "--store={$store}"])[2]);
+        self::assertSame("append needs a FILE or -, --id and --store.\n", $this->run_(['append', $this->dir . '/log-more.md', '--id=log'])[2]);
+    }
+
     public function test_reading_stdin_needs_a_format_and_an_id(): void
     {
         [$code, , $err] = $this->run_(['ingest', '-', '--format=markdown']);

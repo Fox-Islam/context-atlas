@@ -28,7 +28,7 @@ export function parseChat(text: string): Block[] {
     if (!Array.isArray(root)) {
         throw new ContextAtlasError(UNRECOGNISED_CHAT);
     }
-    if (root.length === 0 || recognises(root)) {
+    if (root.length === 0 || recognises(root) || isAgentLog(root)) {
         return threadBlocks(root, []);
     }
 
@@ -89,8 +89,20 @@ function fromObject(root: JsonMap): Block[] {
     if (readMessage(root) !== null) {
         return threadBlocks([root], []);
     }
+    if (isAgentLog([root])) {
+        return [];
+    }
 
     throw new ContextAtlasError(UNRECOGNISED_CHAT);
+}
+
+/**
+ * An agent's session log that holds no message yet: every record names its `type`, and one names
+ * its `sessionId`, as Claude Code writes before the first prompt.
+ */
+function isAgentLog(records: readonly unknown[]): boolean {
+    return records.every((record) => record instanceof JsonMap && record.string('type') !== null)
+        && records.some((record) => record instanceof JsonMap && record.string('sessionId') !== null);
 }
 
 /** Each conversation under a level-1 heading of its title. */

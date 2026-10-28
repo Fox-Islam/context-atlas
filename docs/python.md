@@ -15,7 +15,9 @@ pip install context-atlas      # or: uv add context-atlas
 
 Python 3.10 or later. Jev is reached through the official
 [`typesafe-sdk`](https://pypi.org/project/typesafe-sdk/), which reads
-`TYPESAFE_API_KEY`, or `OPENROUTER_API_KEY` with `TYPESAFE_PROVIDER=openrouter`.
+`TYPESAFE_API_KEY`. `client_from_env()` builds the client the command line uses, which also reads
+`OPENROUTER_API_KEY` with `TYPESAFE_PROVIDER=openrouter`; it raises the SDK's `TypeSafeError`
+when the provider's key is missing.
 
 Bad input (an unknown format or config key, a file that cannot be read, a malformed block
 list, retrieval without Jev) raises `ContextAtlasError`. A Jev request that fails never
@@ -161,6 +163,7 @@ corrected message), `abstained` and `trace`.
 context-atlas chunk [FILE|-] [--format=markdown|text|blocks] [--no-jev] [--config=FILE] [--pretty]
 context-atlas rank QUERY [FILE|-] [--limit=N] [--config=FILE] [--pretty]
 context-atlas ingest FILE|- [--id=ID] [--format=FORMAT] [--profile=PROFILE] [--title=TITLE] [--store=DIR] [--no-jev] [--config=FILE] [--pretty]
+context-atlas append FILE|- --id=ID --store=DIR [--format=FORMAT] [--profile=PROFILE] [--no-jev] [--config=FILE] [--pretty]
 context-atlas retrieve QUERY --store=DIR [--documents=ID,...] [--config=FILE] [--pretty]
 python -m context_atlas ...
 ```
@@ -169,7 +172,8 @@ python -m context_atlas ...
 file as blocks. `rank` reads a JSON list of passages or the output of `chunk`.
 `ingest` reads any supported format (by extension, or `--format`, which a chat
 log needs unless it is a `.json` or `.jsonl` file; stdin needs `--format` and `--id`) and prints the document, or with
-`--store=DIR` saves it there and prints a summary. `retrieve` answers QUERY from that store by exact
+`--store=DIR` saves it there and prints a summary. `append` adds a file's new text to the end of the
+stored prose document `--id`, asking Jev only about the new blocks. `retrieve` answers QUERY from that store by exact
 terms, optionally limited to `--documents`.
 `--config` names a JSON file of the keys in `spec/config.schema.json`. Exit
 codes: 0 done, 1 bad input, 2 Jev did not answer. `TYPESAFE_PROVIDER=openrouter`

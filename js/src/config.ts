@@ -39,6 +39,8 @@ export interface ConfigOptions {
     conversationOutcomes: boolean;
     /** Ask Jev which conversation messages correct an earlier one. */
     conversationCorrections: boolean;
+    /** At retrieval, places among the first candidates kept for the caller's top vector hits that fusion ranks lower. */
+    nearestReserved: number;
 }
 
 /** `integer` and `number` carry the schema's bounds; `config.test.ts` checks this table against spec/config.schema.json. */
@@ -67,6 +69,7 @@ export const CONFIG_RULES: Readonly<Record<string, Rule>> = {
     conversation_replies: { key: 'conversationReplies', type: 'boolean', default: true },
     conversation_outcomes: { key: 'conversationOutcomes', type: 'boolean', default: true },
     conversation_corrections: { key: 'conversationCorrections', type: 'boolean', default: true },
+    nearest_reserved: { key: 'nearestReserved', type: 'integer', minimum: 0, default: 0 },
 };
 
 /**
@@ -93,6 +96,7 @@ export class Config implements ConfigOptions {
     readonly conversationReplies!: boolean;
     readonly conversationOutcomes!: boolean;
     readonly conversationCorrections!: boolean;
+    readonly nearestReserved!: number;
 
     /** @throws {ContextAtlasError} on a value of the wrong type or out of range */
     constructor(options: Partial<ConfigOptions> = {}) {

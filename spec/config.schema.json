@@ -23,6 +23,7 @@
         "cross_check_rescue": { "type": "boolean", "default": false, "description": "Return the cross-check's pick even when no passage reached rank_threshold." },
         "conversation_replies": { "type": "boolean", "default": true, "description": "Ask Jev which earlier message a conversation turn replies to when the source does not say. Off, only source reply_to links are kept." },
         "conversation_outcomes": { "type": "boolean", "default": true, "description": "Ask Jev which conversation messages record an outcome and what each settles (decides links)." },
-        "conversation_corrections": { "type": "boolean", "default": true, "description": "Ask Jev which conversation messages correct an earlier one (corrects links)." }
+        "conversation_corrections": { "type": "boolean", "default": true, "description": "Ask Jev which conversation messages correct an earlier one (corrects links)." },
+        "nearest_reserved": { "type": "integer", "minimum": 0, "default": 0, "description": "At retrieval, places among the first 9 candidates kept for the caller's top vector hits that fusion ranks lower; above 9 counts as 9, and 0 leaves the fused order." }
     }
 }

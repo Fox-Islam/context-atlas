@@ -63,17 +63,23 @@ The decoded value (the **root**) resolves to conversations:
    2. The root is a **container** (below): one conversation.
    3. Its `conversation` member is a container object: that one conversation.
    4. The root is itself a recognised item (Items): one conversation of that item.
-   5. Otherwise the error (below).
+   5. The root is an **agent log** (below) of one record: no blocks.
+   6. Otherwise the error (below).
 2. **Root array** (or JSON Lines records).
    1. Empty: no blocks.
    2. At least one element is a recognised item: one conversation whose items are the elements.
-   3. Otherwise its elements that are container objects form a list of conversations (others
+   3. The elements are an **agent log**: no blocks.
+   4. Otherwise its elements that are container objects form a list of conversations (others
       are dropped); none is the error.
 3. **A list of conversations**: each conversation, in order, gives a level-1 heading, then its
    blocks. The heading is `title`, else `name` (a string not empty after squash, squashed), else
    `id` (a string, or a number as written), `uuid`, `conversation_id` (non-empty strings), else
    `Conversation <n>`, n counting the list's conversations from 1. A single conversation (steps
    1.2-1.4, 2.2) has no heading.
+
+An **agent log** is the records an agent writes to a session before its first message: every
+record is an object with a string `type`, and at least one has a string `sessionId`, as in a
+Claude Code transcript before the first prompt.
 
 Any other root (a string, number, `true`, `false`, `null`) is the error.
 

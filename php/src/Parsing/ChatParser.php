@@ -40,7 +40,7 @@ final class ChatParser
         if (! is_array($root) || ! array_is_list($root)) {
             throw new ContextAtlasException(self::UNRECOGNISED);
         }
-        if ($root === [] || Thread::recognises($root)) {
+        if ($root === [] || Thread::recognises($root) || self::isAgentLog($root)) {
             return Thread::blocks($root, []);
         }
         $conversations = array_values(array_filter($root, static fn (mixed $item): bool => $item instanceof JsonMap && self::items($item) !== null));
@@ -98,7 +98,24 @@ final class ChatParser
         if (Messages::read($root) !== null) {
             return Thread::blocks([$root], []);
         }
+        if (self::isAgentLog([$root])) {
+            return [];
+        }
         throw new ContextAtlasException(self::UNRECOGNISED);
+    }
+
+    /**
+     * An agent's session log that holds no message yet: every record names its `type`, and one
+     * names its `sessionId`, as Claude Code writes before the first prompt.
+     *
+     * @param  list<mixed>  $records
+     */
+    private static function isAgentLog(array $records): bool
+    {
+        $named = array_filter($records, static fn (mixed $record): bool => $record instanceof JsonMap && $record->string('type') !== null);
+        $sessions = array_filter($records, static fn (mixed $record): bool => $record instanceof JsonMap && $record->string('sessionId') !== null);
+
+        return count($named) === count($records) && $sessions !== [];
     }
 
     /**

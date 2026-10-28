@@ -100,6 +100,10 @@ and an append-only term index in `index/`, so a query reads only what it needs:
    weights come from the whole source), `nearest` is asked for those documents (and its hits
    are filtered to them), and the top 20 are kept. A port whose language rejects an extra
    argument passes `documents` only to a `nearest` that declares four parameters.
+   With `nearest_reserved` n above 0, the first n of `nearest`'s hits (at most 9, after the
+   filter to `documents`) that are not among the first 9 fused units take the last places of
+   those 9, in `nearest`'s order, before the 20 are kept; the units they displace move down in
+   order. 9 is the smallest first-request pool a prose profile ranks (`spec/prose.md`).
 2. **Tables.** With `documents`, every table unit of those documents in document and unit
    order, otherwise the table candidates; the first 12 go to the tabular planner
    (`spec/tabular.md`). Its context is returned unless it abstains and passage candidates exist.

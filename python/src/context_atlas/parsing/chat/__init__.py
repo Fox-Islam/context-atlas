@@ -30,7 +30,7 @@ def parse(source: str) -> list[Block]:
         return _object(root)
     if not isinstance(root, list):
         raise ContextAtlasError(UNRECOGNISED)
-    if not root or thread.recognises(root):
+    if not root or thread.recognises(root) or _is_agent_log(root):
         return thread.blocks(root, [])
     conversations = [item for item in root if isinstance(item, JsonMap) and _items(item) is not None]
     if not conversations:
@@ -72,7 +72,19 @@ def _object(root: JsonMap) -> list[Block]:
             return thread.blocks(items, _system(conversation))
     if messages.read(root) is not None:
         return thread.blocks([root], [])
+    if _is_agent_log([root]):
+        return []
     raise ContextAtlasError(UNRECOGNISED)
+
+
+def _is_agent_log(records: list[Any]) -> bool:
+    """
+    An agent's session log that holds no message yet: every record names its `type`, and one names
+    its `sessionId`, as Claude Code writes before the first prompt.
+    """
+    named = all(isinstance(record, JsonMap) and record.string('type') is not None for record in records)
+
+    return named and any(isinstance(record, JsonMap) and record.string('sessionId') is not None for record in records)
 
 
 def _many(conversations: list[JsonMap]) -> list[Block]:

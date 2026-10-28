@@ -58,6 +58,7 @@ interface Case {
     kind: 'chunk' | 'rank' | 'config' | 'blocks' | 'ingest' | 'retrieve' | 'prose-ingest' | 'prose-retrieve' | 'prose-append' | 'markup-ingest' | 'read';
     documents?: (SpreadsheetInput | ProseInput | MarkupInput)[];
     scope?: string[];
+    nearest?: { document: string; unit: string }[];
     format?: 'markdown' | 'text' | 'blocks';
     input?: unknown;
     query?: string;
@@ -163,7 +164,12 @@ describe('spec/fixtures.json', () => {
                     documents.push('markup' in input ? markup(input as MarkupInput) : await prose(input as ProseInput, client));
                 }
 
-                const context = await new Processor(client).retrieve(fixture.query ?? '', new Collection(documents), fixture.scope === undefined ? {} : { documents: fixture.scope });
+                // A vector search that returns the case's hits, best first, whatever the query.
+                const hits = fixture.nearest;
+                const context = await new Processor(client, Config.fromObject(fixture.config ?? {})).retrieve(fixture.query ?? '', new Collection(documents), {
+                    ...(fixture.scope === undefined ? {} : { documents: fixture.scope }),
+                    ...(hits === undefined ? {} : { nearest: () => hits }),
+                });
                 output = context === null ? null : context.toObject();
             }
 

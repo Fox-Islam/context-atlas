@@ -3842,7 +3842,8 @@
                     "cross_check_rescue": false,
                     "conversation_replies": true,
                     "conversation_outcomes": true,
-                    "conversation_corrections": true
+                    "conversation_corrections": true,
+                    "nearest_reserved": 0
                 }
             }
         },
@@ -21314,6 +21315,737 @@
                         "p1": 0.8,
                         "p2": 0.7,
                         "p3": 0.6
+                    }
+                }
+            }
+        },
+        {
+            "name": "seat a vector hit fusion ranks below the pool in the pool's last place",
+            "kind": "prose-retrieve",
+            "query": "When are invoices due?",
+            "documents": [
+                {
+                    "id": "billing",
+                    "profile": "reference",
+                    "blocks": [
+                        {
+                            "type": "heading",
+                            "text": "Billing",
+                            "level": 1
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 1",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Invoices are issued on the first working day of each month."
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 2",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Invoices list each service with its own line."
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 3",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Invoices in euros are converted at the day's rate."
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 4",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Invoices for less than ten pounds are rolled into the next month."
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 5",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Invoices can be downloaded from the account page."
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 6",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Invoices are sent to the billing contact by email."
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 7",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Invoices carry the purchase order number when one is given."
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 8",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Invoices that are disputed are put on hold."
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 9",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Invoices for annual plans are issued once a year."
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 10",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Invoices show VAT separately."
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 11",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Invoices are numbered in sequence."
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 12",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Invoices are kept for seven years."
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 13",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Payment is expected one month after the bill is sent."
+                        }
+                    ]
+                }
+            ],
+            "scope": [
+                "billing"
+            ],
+            "nearest": [
+                {
+                    "document": "billing",
+                    "unit": "e1"
+                },
+                {
+                    "document": "billing",
+                    "unit": "e13"
+                },
+                {
+                    "document": "billing",
+                    "unit": "e2"
+                },
+                {
+                    "document": "billing",
+                    "unit": "e3"
+                },
+                {
+                    "document": "billing",
+                    "unit": "e4"
+                },
+                {
+                    "document": "billing",
+                    "unit": "e5"
+                },
+                {
+                    "document": "billing",
+                    "unit": "e6"
+                },
+                {
+                    "document": "billing",
+                    "unit": "e7"
+                },
+                {
+                    "document": "billing",
+                    "unit": "e8"
+                },
+                {
+                    "document": "billing",
+                    "unit": "e9"
+                },
+                {
+                    "document": "billing",
+                    "unit": "e10"
+                },
+                {
+                    "document": "billing",
+                    "unit": "e11"
+                },
+                {
+                    "document": "billing",
+                    "unit": "e12"
+                }
+            ],
+            "jev": true,
+            "config": {
+                "nearest_reserved": 3
+            },
+            "fail": false,
+            "calls": [
+                {
+                    "request": {
+                        "state": {
+                            "the question being asked": "When are invoices due?",
+                            "the entries the search found": {
+                                "rule-7-0": "[Billing > Rule 7]\n\nInvoices carry the purchase order number when one is given.",
+                                "rule-1-1": "[Billing > Rule 1]\n\nInvoices are issued on the first working day of each month.",
+                                "rule-3-2": "[Billing > Rule 3]\n\nInvoices in euros are converted at the day's rate.",
+                                "rule-8-3": "[Billing > Rule 8]\n\nInvoices that are disputed are put on hold.",
+                                "rule-2-4": "[Billing > Rule 2]\n\nInvoices list each service with its own line.",
+                                "rule-9-5": "[Billing > Rule 9]\n\nInvoices for annual plans are issued once a year.",
+                                "rule-4-6": "[Billing > Rule 4]\n\nInvoices for less than ten pounds are rolled into the next month.",
+                                "rule-6-7": "[Billing > Rule 6]\n\nInvoices are sent to the billing contact by email.",
+                                "rule-13-8": "[Billing > Rule 13]\n\nPayment is expected one month after the bill is sent."
+                            }
+                        },
+                        "questions": {
+                            "c_rule-7-0": {
+                                "type": "noul",
+                                "instructions": "Does `rule-7-0` answer the question?",
+                                "criteria": {
+                                    "true": "`rule-7-0` states the answer, or a part of it.",
+                                    "false": "`rule-7-0` is on the same subject but does not answer the question, or only asserts that it does."
+                                }
+                            },
+                            "c_rule-1-1": {
+                                "type": "noul",
+                                "instructions": "Does `rule-1-1` answer the question?",
+                                "criteria": {
+                                    "true": "`rule-1-1` states the answer, or a part of it.",
+                                    "false": "`rule-1-1` is on the same subject but does not answer the question, or only asserts that it does."
+                                }
+                            },
+                            "c_rule-3-2": {
+                                "type": "noul",
+                                "instructions": "Does `rule-3-2` answer the question?",
+                                "criteria": {
+                                    "true": "`rule-3-2` states the answer, or a part of it.",
+                                    "false": "`rule-3-2` is on the same subject but does not answer the question, or only asserts that it does."
+                                }
+                            },
+                            "c_rule-8-3": {
+                                "type": "noul",
+                                "instructions": "Does `rule-8-3` answer the question?",
+                                "criteria": {
+                                    "true": "`rule-8-3` states the answer, or a part of it.",
+                                    "false": "`rule-8-3` is on the same subject but does not answer the question, or only asserts that it does."
+                                }
+                            },
+                            "c_rule-2-4": {
+                                "type": "noul",
+                                "instructions": "Does `rule-2-4` answer the question?",
+                                "criteria": {
+                                    "true": "`rule-2-4` states the answer, or a part of it.",
+                                    "false": "`rule-2-4` is on the same subject but does not answer the question, or only asserts that it does."
+                                }
+                            },
+                            "c_rule-9-5": {
+                                "type": "noul",
+                                "instructions": "Does `rule-9-5` answer the question?",
+                                "criteria": {
+                                    "true": "`rule-9-5` states the answer, or a part of it.",
+                                    "false": "`rule-9-5` is on the same subject but does not answer the question, or only asserts that it does."
+                                }
+                            },
+                            "c_rule-4-6": {
+                                "type": "noul",
+                                "instructions": "Does `rule-4-6` answer the question?",
+                                "criteria": {
+                                    "true": "`rule-4-6` states the answer, or a part of it.",
+                                    "false": "`rule-4-6` is on the same subject but does not answer the question, or only asserts that it does."
+                                }
+                            },
+                            "c_rule-6-7": {
+                                "type": "noul",
+                                "instructions": "Does `rule-6-7` answer the question?",
+                                "criteria": {
+                                    "true": "`rule-6-7` states the answer, or a part of it.",
+                                    "false": "`rule-6-7` is on the same subject but does not answer the question, or only asserts that it does."
+                                }
+                            },
+                            "c_rule-13-8": {
+                                "type": "noul",
+                                "instructions": "Does `rule-13-8` answer the question?",
+                                "criteria": {
+                                    "true": "`rule-13-8` states the answer, or a part of it.",
+                                    "false": "`rule-13-8` is on the same subject but does not answer the question, or only asserts that it does."
+                                }
+                            },
+                            "best": {
+                                "type": "choice",
+                                "instructions": "Which single one answers the question most directly?",
+                                "criteria": {
+                                    "rule-7-0": null,
+                                    "rule-1-1": null,
+                                    "rule-3-2": null,
+                                    "rule-8-3": null,
+                                    "rule-2-4": null,
+                                    "rule-9-5": null,
+                                    "rule-4-6": null,
+                                    "rule-6-7": null,
+                                    "rule-13-8": null
+                                }
+                            },
+                            "scope": {
+                                "type": "choice",
+                                "instructions": "What does a full answer to the question need?",
+                                "criteria": {
+                                    "one entry": "what one entry says",
+                                    "named entries": "two or more entries the question names, for example to compare them",
+                                    "all entries with a property": "every entry that has a feature the question names, such as a parameter, a version or a value"
+                                }
+                            }
+                        }
+                    },
+                    "response": {
+                        "model": "jev-latest",
+                        "answers": {
+                            "c_rule-13-8": {
+                                "type": "noul",
+                                "noul": 0.9
+                            },
+                            "best": {
+                                "type": "choice",
+                                "choice": "rule-13-8",
+                                "confidence": 0.7496,
+                                "probabilities": {
+                                    "rule-7-0": 0.0313,
+                                    "rule-1-1": 0.0313,
+                                    "rule-3-2": 0.0313,
+                                    "rule-8-3": 0.0313,
+                                    "rule-2-4": 0.0313,
+                                    "rule-9-5": 0.0313,
+                                    "rule-4-6": 0.0313,
+                                    "rule-6-7": 0.0313,
+                                    "rule-13-8": 0.7496
+                                }
+                            }
+                        },
+                        "usage": {
+                            "input_tokens": 969,
+                            "output_tokens": 16,
+                            "cost": null
+                        }
+                    }
+                }
+            ],
+            "expected": {
+                "text": "[Billing > Rule 13]\n\nPayment is expected one month after the bill is sent.",
+                "sources": [
+                    {
+                        "document": "billing",
+                        "unit": "e13"
+                    }
+                ],
+                "abstained": false,
+                "trace": {
+                    "profile": "reference",
+                    "scope": "one entry",
+                    "scores": {
+                        "rule-7-0": 0.0,
+                        "rule-1-1": 0.0,
+                        "rule-3-2": 0.0,
+                        "rule-8-3": 0.0,
+                        "rule-2-4": 0.0,
+                        "rule-9-5": 0.0,
+                        "rule-4-6": 0.0,
+                        "rule-6-7": 0.0,
+                        "rule-13-8": 0.9
+                    }
+                }
+            }
+        },
+        {
+            "name": "without reserved places a vector hit both searches outrank stays out of the pool",
+            "kind": "prose-retrieve",
+            "query": "When are invoices due?",
+            "documents": [
+                {
+                    "id": "billing",
+                    "profile": "reference",
+                    "blocks": [
+                        {
+                            "type": "heading",
+                            "text": "Billing",
+                            "level": 1
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 1",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Invoices are issued on the first working day of each month."
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 2",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Invoices list each service with its own line."
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 3",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Invoices in euros are converted at the day's rate."
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 4",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Invoices for less than ten pounds are rolled into the next month."
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 5",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Invoices can be downloaded from the account page."
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 6",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Invoices are sent to the billing contact by email."
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 7",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Invoices carry the purchase order number when one is given."
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 8",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Invoices that are disputed are put on hold."
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 9",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Invoices for annual plans are issued once a year."
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 10",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Invoices show VAT separately."
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 11",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Invoices are numbered in sequence."
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 12",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Invoices are kept for seven years."
+                        },
+                        {
+                            "type": "heading",
+                            "text": "Rule 13",
+                            "level": 2
+                        },
+                        {
+                            "type": "paragraph",
+                            "text": "Payment is expected one month after the bill is sent."
+                        }
+                    ]
+                }
+            ],
+            "scope": [
+                "billing"
+            ],
+            "nearest": [
+                {
+                    "document": "billing",
+                    "unit": "e1"
+                },
+                {
+                    "document": "billing",
+                    "unit": "e13"
+                },
+                {
+                    "document": "billing",
+                    "unit": "e2"
+                },
+                {
+                    "document": "billing",
+                    "unit": "e3"
+                },
+                {
+                    "document": "billing",
+                    "unit": "e4"
+                },
+                {
+                    "document": "billing",
+                    "unit": "e5"
+                },
+                {
+                    "document": "billing",
+                    "unit": "e6"
+                },
+                {
+                    "document": "billing",
+                    "unit": "e7"
+                },
+                {
+                    "document": "billing",
+                    "unit": "e8"
+                },
+                {
+                    "document": "billing",
+                    "unit": "e9"
+                },
+                {
+                    "document": "billing",
+                    "unit": "e10"
+                },
+                {
+                    "document": "billing",
+                    "unit": "e11"
+                },
+                {
+                    "document": "billing",
+                    "unit": "e12"
+                }
+            ],
+            "jev": true,
+            "config": {},
+            "fail": false,
+            "calls": [
+                {
+                    "request": {
+                        "state": {
+                            "the question being asked": "When are invoices due?",
+                            "the entries the search found": {
+                                "rule-7-0": "[Billing > Rule 7]\n\nInvoices carry the purchase order number when one is given.",
+                                "rule-1-1": "[Billing > Rule 1]\n\nInvoices are issued on the first working day of each month.",
+                                "rule-3-2": "[Billing > Rule 3]\n\nInvoices in euros are converted at the day's rate.",
+                                "rule-8-3": "[Billing > Rule 8]\n\nInvoices that are disputed are put on hold.",
+                                "rule-2-4": "[Billing > Rule 2]\n\nInvoices list each service with its own line.",
+                                "rule-9-5": "[Billing > Rule 9]\n\nInvoices for annual plans are issued once a year.",
+                                "rule-4-6": "[Billing > Rule 4]\n\nInvoices for less than ten pounds are rolled into the next month.",
+                                "rule-6-7": "[Billing > Rule 6]\n\nInvoices are sent to the billing contact by email.",
+                                "rule-11-8": "[Billing > Rule 11]\n\nInvoices are numbered in sequence."
+                            }
+                        },
+                        "questions": {
+                            "c_rule-7-0": {
+                                "type": "noul",
+                                "instructions": "Does `rule-7-0` answer the question?",
+                                "criteria": {
+                                    "true": "`rule-7-0` states the answer, or a part of it.",
+                                    "false": "`rule-7-0` is on the same subject but does not answer the question, or only asserts that it does."
+                                }
+                            },
+                            "c_rule-1-1": {
+                                "type": "noul",
+                                "instructions": "Does `rule-1-1` answer the question?",
+                                "criteria": {
+                                    "true": "`rule-1-1` states the answer, or a part of it.",
+                                    "false": "`rule-1-1` is on the same subject but does not answer the question, or only asserts that it does."
+                                }
+                            },
+                            "c_rule-3-2": {
+                                "type": "noul",
+                                "instructions": "Does `rule-3-2` answer the question?",
+                                "criteria": {
+                                    "true": "`rule-3-2` states the answer, or a part of it.",
+                                    "false": "`rule-3-2` is on the same subject but does not answer the question, or only asserts that it does."
+                                }
+                            },
+                            "c_rule-8-3": {
+                                "type": "noul",
+                                "instructions": "Does `rule-8-3` answer the question?",
+                                "criteria": {
+                                    "true": "`rule-8-3` states the answer, or a part of it.",
+                                    "false": "`rule-8-3` is on the same subject but does not answer the question, or only asserts that it does."
+                                }
+                            },
+                            "c_rule-2-4": {
+                                "type": "noul",
+                                "instructions": "Does `rule-2-4` answer the question?",
+                                "criteria": {
+                                    "true": "`rule-2-4` states the answer, or a part of it.",
+                                    "false": "`rule-2-4` is on the same subject but does not answer the question, or only asserts that it does."
+                                }
+                            },
+                            "c_rule-9-5": {
+                                "type": "noul",
+                                "instructions": "Does `rule-9-5` answer the question?",
+                                "criteria": {
+                                    "true": "`rule-9-5` states the answer, or a part of it.",
+                                    "false": "`rule-9-5` is on the same subject but does not answer the question, or only asserts that it does."
+                                }
+                            },
+                            "c_rule-4-6": {
+                                "type": "noul",
+                                "instructions": "Does `rule-4-6` answer the question?",
+                                "criteria": {
+                                    "true": "`rule-4-6` states the answer, or a part of it.",
+                                    "false": "`rule-4-6` is on the same subject but does not answer the question, or only asserts that it does."
+                                }
+                            },
+                            "c_rule-6-7": {
+                                "type": "noul",
+                                "instructions": "Does `rule-6-7` answer the question?",
+                                "criteria": {
+                                    "true": "`rule-6-7` states the answer, or a part of it.",
+                                    "false": "`rule-6-7` is on the same subject but does not answer the question, or only asserts that it does."
+                                }
+                            },
+                            "c_rule-11-8": {
+                                "type": "noul",
+                                "instructions": "Does `rule-11-8` answer the question?",
+                                "criteria": {
+                                    "true": "`rule-11-8` states the answer, or a part of it.",
+                                    "false": "`rule-11-8` is on the same subject but does not answer the question, or only asserts that it does."
+                                }
+                            },
+                            "best": {
+                                "type": "choice",
+                                "instructions": "Which single one answers the question most directly?",
+                                "criteria": {
+                                    "rule-7-0": null,
+                                    "rule-1-1": null,
+                                    "rule-3-2": null,
+                                    "rule-8-3": null,
+                                    "rule-2-4": null,
+                                    "rule-9-5": null,
+                                    "rule-4-6": null,
+                                    "rule-6-7": null,
+                                    "rule-11-8": null
+                                }
+                            },
+                            "scope": {
+                                "type": "choice",
+                                "instructions": "What does a full answer to the question need?",
+                                "criteria": {
+                                    "one entry": "what one entry says",
+                                    "named entries": "two or more entries the question names, for example to compare them",
+                                    "all entries with a property": "every entry that has a feature the question names, such as a parameter, a version or a value"
+                                }
+                            }
+                        }
+                    },
+                    "response": {
+                        "model": "jev-latest",
+                        "answers": {
+                            "best": {
+                                "type": "choice",
+                                "choice": "rule-13-8",
+                                "confidence": 0.7498,
+                                "probabilities": {
+                                    "rule-7-0": 0.0278,
+                                    "rule-1-1": 0.0278,
+                                    "rule-3-2": 0.0278,
+                                    "rule-8-3": 0.0278,
+                                    "rule-2-4": 0.0278,
+                                    "rule-9-5": 0.0278,
+                                    "rule-4-6": 0.0278,
+                                    "rule-6-7": 0.0278,
+                                    "rule-11-8": 0.0278,
+                                    "rule-13-8": 0.7498
+                                }
+                            }
+                        },
+                        "usage": {
+                            "input_tokens": 964,
+                            "output_tokens": 8,
+                            "cost": null
+                        }
+                    }
+                }
+            ],
+            "expected": {
+                "text": "",
+                "sources": [],
+                "abstained": true,
+                "trace": {
+                    "reason": "no passage answers the question",
+                    "profile": "reference",
+                    "scope": "one entry",
+                    "scores": {
+                        "rule-7-0": 0.0,
+                        "rule-1-1": 0.0,
+                        "rule-3-2": 0.0,
+                        "rule-8-3": 0.0,
+                        "rule-2-4": 0.0,
+                        "rule-9-5": 0.0,
+                        "rule-4-6": 0.0,
+                        "rule-6-7": 0.0,
+                        "rule-11-8": 0.0
                     }
                 }
             }
@@ -41989,6 +42721,39 @@
             "input": {
                 "format": "chat",
                 "text": "[1, \"two\", {\"x\": 3}]"
+            },
+            "expected": {
+                "error": "A chat transcript must be a JSON array or JSON Lines of messages, an object holding them (messages, contents, history, input, items, chat_messages, mapping, ...), or a list of conversations."
+            }
+        },
+        {
+            "name": "chat: an agent session log with no message yet reads as no blocks",
+            "kind": "read",
+            "input": {
+                "format": "chat",
+                "text": "{\"type\":\"mode\",\"mode\":\"default\",\"sessionId\":\"5b1f\"}\n{\"type\":\"permission-mode\",\"permissionMode\":\"default\",\"sessionId\":\"5b1f\"}\n{\"type\":\"file-history-snapshot\",\"messageId\":\"m1\",\"snapshot\":{}}\n"
+            },
+            "expected": {
+                "blocks": []
+            }
+        },
+        {
+            "name": "chat: an agent session log of one record and no message reads as no blocks",
+            "kind": "read",
+            "input": {
+                "format": "chat",
+                "text": "{\"type\":\"mode\",\"mode\":\"default\",\"sessionId\":\"5b1f\"}"
+            },
+            "expected": {
+                "blocks": []
+            }
+        },
+        {
+            "name": "chat: typed records with no session and no message are an error",
+            "kind": "read",
+            "input": {
+                "format": "chat",
+                "text": "{\"type\":\"invoice\",\"total\":10}\n{\"type\":\"refund\",\"total\":4}\n"
             },
             "expected": {
                 "error": "A chat transcript must be a JSON array or JSON Lines of messages, an object holding them (messages, contents, history, input, items, chat_messages, mapping, ...), or a list of conversations."

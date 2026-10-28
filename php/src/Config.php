@@ -32,6 +32,7 @@ final readonly class Config
         'conversation_replies' => 'conversationReplies',
         'conversation_outcomes' => 'conversationOutcomes',
         'conversation_corrections' => 'conversationCorrections',
+        'nearest_reserved' => 'nearestReserved',
     ];
 
     public function __construct(
@@ -54,6 +55,7 @@ final readonly class Config
         public bool $conversationReplies = true,
         public bool $conversationOutcomes = true,
         public bool $conversationCorrections = true,
+        public int $nearestReserved = 0,
     ) {}
 
     /**

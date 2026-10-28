@@ -42,7 +42,11 @@ def run(case: dict[str, Any], fake: FakeJev) -> Any:
         collection = Collection(
             markup(document) if 'markup' in document else prose(document, fake) for document in case['documents']
         )
-        context = Processor(fake.client).retrieve(case['query'], collection, documents=case.get('scope'))
+        # A vector search that returns the case's hits, best first, whatever the query.
+        hits = case.get('nearest')
+        nearest = None if hits is None else (lambda query, limit, kinds, documents: hits)
+        processor = Processor(fake.client, Config.from_dict(case.get('config') or {}))
+        context = processor.retrieve(case['query'], collection, nearest=nearest, documents=case.get('scope'))
         return None if context is None else context.to_dict()
     if case['kind'] == 'retrieve':
         collection = Collection(spreadsheet(document) for document in case['documents'])

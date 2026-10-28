@@ -9,7 +9,7 @@ import { parseMarkdown } from '../parsing/markdown.js';
 import { parseText } from '../parsing/text.js';
 import { Reranker } from '../reranker.js';
 import { Passage } from '../retrieval/passage.js';
-import { formatOf as documentFormatOf } from '../parsing/formats.js';
+import { formatOf as documentFormatOf, readBlocks } from '../parsing/formats.js';
 import { Processor } from '../processor.js';
 import { FileStore } from '../store/fileStore.js';
 import { phpArray, phpTrim } from '../support/php.js';
@@ -25,6 +25,8 @@ const USAGE = `Usage:
   context-atlas rank QUERY [FILE|-] [--limit=N] [--config=FILE] [--pretty]
   context-atlas ingest FILE|- [--id=ID] [--format=FORMAT] [--profile=PROFILE] [--title=TITLE]
                         [--store=DIR] [--no-jev] [--config=FILE] [--pretty]
+  context-atlas append FILE|- --id=ID --store=DIR [--format=FORMAT] [--profile=PROFILE]
+                        [--no-jev] [--config=FILE] [--pretty]
   context-atlas retrieve QUERY --store=DIR [--documents=ID,...] [--config=FILE] [--pretty]
 
 chunk  Splits a document into passages. Reads Markdown by default; a .txt file is
@@ -34,6 +36,9 @@ rank   Orders passages by whether they answer QUERY. FILE is a JSON list of
 ingest Reads a document in any supported format (by its extension, or --format;
        stdin needs --format and --id) and prints it as a stored document, or,
        with --store, saves it in that directory and prints a summary.
+append Adds a document's new text (by its extension, or --format) to the end of the
+       prose document --id in --store, asking Jev only about the new blocks, and
+       prints a summary.
 retrieve
        Gathers the context that answers QUERY from the documents in --store,
        searched by exact terms; --documents limits it to those ids.
@@ -88,6 +93,9 @@ export class Application {
             }
             if (args.command === 'ingest') {
                 return await this.ingest(args);
+            }
+            if (args.command === 'append') {
+                return await this.append(args);
             }
             if (args.command === 'retrieve') {
                 return await this.retrieve(args);
@@ -176,6 +184,42 @@ export class Application {
         }
 
         new FileStore(store).put(document);
+
+        return this.json({
+            id: document.id,
+            profile: document.profile,
+            detected: document.detected,
+            units: document.units.length,
+            links: document.links.length,
+            store,
+        }, args);
+    }
+
+    private async append(args: Args): Promise<number> {
+        const path = args.positional[0];
+        const id = args.option('id');
+        const store = args.option('store');
+
+        if (path === undefined || id === null || store === null) {
+            throw new ContextAtlasError('append needs a FILE or -, --id and --store.');
+        }
+
+        const format = args.option('format') ?? (path === '-' ? null : documentFormatOf(path));
+
+        if (format === null) {
+            throw new ContextAtlasError(path === '-' ? 'Reading stdin needs --format.' : `Cannot tell the format of ${path}: pass --format.`);
+        }
+
+        const files = new FileStore(store);
+        const stored = files.document(id);
+
+        if (stored === null) {
+            throw new ContextAtlasError(`No document "${id}" in ${store}.`);
+        }
+
+        const blocks = readBlocks(this.read(path), format);
+        const document = await new Processor(args.has('no-jev') ? null : this.jev(), this.config(args)).append(stored, blocks, args.option('profile'));
+        files.put(document);
 
         return this.json({
             id: document.id,

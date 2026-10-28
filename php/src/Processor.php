@@ -15,6 +15,7 @@ use Phox\ContextAtlas\Markup\MarkupProfile;
 use Phox\ContextAtlas\Parsing\ChatParser;
 use Phox\ContextAtlas\Parsing\DocxParser;
 use Phox\ContextAtlas\Parsing\Formats;
+use Phox\ContextAtlas\Prose\Profiles;
 use Phox\ContextAtlas\Prose\ProseProfile;
 use Phox\ContextAtlas\Prose\Retriever as ProseRetriever;
 use Phox\ContextAtlas\Tabular\Executor;
@@ -362,9 +363,15 @@ final readonly class Processor
             }
         }
         arsort($scores);
+        $keys = array_map('strval', array_keys($scores));
+
+        if ($this->config->nearestReserved > 0) {
+            $top = array_map(static fn (array $hit): string => $hit['document'] . "\0" . $hit['unit'], array_slice($lists[1] ?? [], 0, min($this->config->nearestReserved, self::reservedPool())));
+            $keys = self::reserve($keys, $top);
+        }
 
         $out = [];
-        foreach (array_slice(array_keys($scores), 0, self::CANDIDATES) as $key) {
+        foreach (array_slice($keys, 0, self::CANDIDATES) as $key) {
             [$documentId, $unitId] = explode("\0", (string) $key, 2);
             $document = $source->document($documentId);
             $unit = $document?->unit($unitId);
@@ -374,6 +381,36 @@ final readonly class Processor
         }
 
         return $out;
+    }
+
+    /**
+     * The fused keys with each of `top` missing from the reserved pool seated in that pool's
+     * last places, in `top`'s order; the keys they displace move down, in order.
+     *
+     * @param  list<string>  $keys
+     * @param  list<string>  $top
+     * @return list<string>
+     */
+    private static function reserve(array $keys, array $top): array
+    {
+        $size = self::reservedPool();
+        $pool = array_slice($keys, 0, $size);
+        $missing = array_values(array_unique(array_filter($top, static fn (string $key): bool => ! in_array($key, $pool, true))));
+
+        if ($missing === []) {
+            return $keys;
+        }
+
+        $rest = array_values(array_filter($keys, static fn (string $key): bool => ! in_array($key, $missing, true)));
+        $kept = $size - count($missing);
+
+        return [...array_slice($rest, 0, $kept), ...$missing, ...array_slice($rest, $kept)];
+    }
+
+    /** Reserved vector hits are seated in the smallest first-request pool a prose profile ranks. */
+    private static function reservedPool(): int
+    {
+        return min(Profiles::POOL);
     }
 
     /**

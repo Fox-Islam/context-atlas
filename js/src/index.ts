@@ -9,6 +9,7 @@ export { parseText } from './parsing/text.js';
 export { Reranker } from './reranker.js';
 export { Passage, RankedPassage, type PassageObject, type RankedObject } from './retrieval/passage.js';
 export type { Jev, JevHook, JevResult } from './typesafe/jev.js';
+export { clientFromEnv } from './typesafe/client.js';
 export { Context, type ContextObject, type ContextSource } from './context.js';
 export { Document, type Detected, type DocumentObject, type Lexical } from './document/document.js';
 export { Link, type LinkObject } from './document/link.js';

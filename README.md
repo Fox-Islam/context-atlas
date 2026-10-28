@@ -80,8 +80,8 @@ foreach ($document->units as $unit) {
 ```
 
 `$embed` and `$vectors` stand for your embedding model and vector store. Ingestion asks Jev
-about the document, from a few requests for a short page to a few hundred for a long
-transcript, so run it in a queue, not in a web request. To update a document, ingest it again
+about the document, from a few requests for a short page to about 1,300 for a 14,500-line
+Claude Code session log, so run it in a queue, not in a web request. To update a document, ingest it again
 under the same id and replace its vectors; to delete it, `$store->remove($fileId)` and drop
 its vectors.
 
@@ -101,8 +101,9 @@ $context = $processor->retrieve($question, $store, $nearest, documents: $allowed
 Without `$nearest`, retrieval uses exact terms alone, which needs no embeddings.
 
 **3. Answer from the context.** `$context->text` is a few hundred tokens of passages, each
-headed with where it sits in its document; a question about a spreadsheet gives a computed
-result instead:
+headed with where it sits in its document, and more where the passages are long: over Claude
+Code session logs, whose messages carry tool output, it averages about 1,000 tokens and reaches
+2,000. A question about a spreadsheet gives a computed result instead:
 
 ```php
 if ($context === null) {
@@ -192,6 +193,11 @@ $store->put($processor->ingestBlocks($pdfBlocks, 'handbook'));   // blocks from 
   asked only for the postings of the query's terms and the documents it needs.
 - `retrieve()` fuses exact-term and vector hits by reciprocal rank and asks for 20 candidates
   (200 within `documents`). `$kinds` is always null, so `$nearest` may ignore it.
+- Jev judges only each profile's pool of leading candidates ([spec/prose.md](spec/prose.md)),
+  and a unit that only the vector search finds can rank below units both searches find lower
+  down. `nearest_reserved` keeps that many places in the smallest pool for the top vector hits.
+  On 42 reworded questions about Claude Code sessions, 3 places answered 31 against 27 with
+  none; it is measured on chat transcripts only, and off by default.
 - The document format is fixed across PHP, JavaScript and Python
   ([spec/document.md](spec/document.md)), so a document ingested by one is read by the others.
 
@@ -332,13 +338,15 @@ context-atlas rank "How long do I have to return an order?" chunks.json --limit=
 context-atlas ingest terms.html --store=./documents
 context-atlas ingest rates.xlsx --store=./documents --id=rates-2026
 context-atlas ingest session.jsonl --format=chat --store=./documents
+context-atlas append new-lines.jsonl --format=chat --id=session.jsonl --store=./documents
 context-atlas retrieve "What is the late payment fee?" --store=./documents
 ```
 
 `chunk` prints `{"chunks", "outline", "used_jev"}`. `rank` takes a JSON list
 of `{"id", "text", "heading_path"}` or the output of `chunk`, and prints
 `[{"id", "score", "text"}]`. `ingest` reads any supported format and prints the stored
-document, or with `--store` saves it in that directory; `retrieve` answers from a store by exact
+document, or with `--store` saves it in that directory; `append` adds new text to the end of a
+stored prose document, asking Jev only about the new blocks; `retrieve` answers from a store by exact
 terms (vector search needs the library) and prints `{"text", "sources", "abstained", "trace"}`.
 Exit codes: 0 done, 1 bad input, 2 Jev did not answer. Each package installs the same command.
 

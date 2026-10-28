@@ -164,6 +164,18 @@ describe('ingest and retrieve', () => {
         assert.deepEqual([code, context.abstained, context.sources], [0, false, [{ document: 'fees', unit: 'p1' }]]);
     });
 
+    it('appends new text to a stored document, and refuses one the store lacks', async () => {
+        const store = join(dir, 'store-c');
+        await run(['ingest', file('log.md', '# Log\n\nThe import started.\n'), '--no-jev', '--id=log', `--store=${store}`]);
+        const appended = await run(['append', file('log-more.md', '# Later\n\nThe import finished.\n'), '--no-jev', '--id=log', `--store=${store}`]);
+        const missing = await run(['append', file('log-other.md', 'More.\n'), '--no-jev', '--id=other', `--store=${store}`]);
+
+        assert.deepEqual([appended.code, JSON.parse(appended.out).units], [0, 2]);
+        assert.deepEqual([missing.code, missing.err], [1, `No document "other" in ${store}.\n`]);
+        assert.deepEqual((await run(['append', '-', '--id=log', `--store=${store}`])).err, 'Reading stdin needs --format.\n');
+        assert.deepEqual((await run(['append', file('log-x.md', 'x\n'), '--id=log'])).err, 'append needs a FILE or -, --id and --store.\n');
+    });
+
     it('needs an id and a format to read stdin', async () => {
         assert.deepEqual(await run(['ingest', '-', '--format=markdown']), { code: 1, out: '', err: 'Reading stdin needs --id.\n' });
         assert.deepEqual((await run(['ingest', '-', '--id=x'])).err, 'Reading stdin needs --format.\n');

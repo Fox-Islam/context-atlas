@@ -35,6 +35,7 @@ class Config:
     conversation_replies: bool = True
     conversation_outcomes: bool = True
     conversation_corrections: bool = True
+    nearest_reserved: int = 0
 
     @staticmethod
     def from_dict(values: dict[str, Any]) -> Config:
@@ -87,6 +88,7 @@ RULES: dict[str, _Rule] = {
     'conversation_replies': _Rule('boolean'),
     'conversation_outcomes': _Rule('boolean'),
     'conversation_corrections': _Rule('boolean'),
+    'nearest_reserved': _Rule('integer', 0),
 }
 
 
